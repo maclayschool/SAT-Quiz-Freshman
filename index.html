@@ -271,9 +271,23 @@
   .college .name{font-weight:700;color:var(--navy);font-size:16px;}
   .college .range{font-family:var(--serif);color:var(--muted);font-size:14px;margin-top:2px;}
   .badge{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:5px 10px;border-radius:20px;white-space:nowrap;}
-  .badge.match{background:#E7F3EC;color:var(--ok);}
-  .badge.reach{background:#FBF2DA;color:#8a6a12;}
+  .badge.match{background:var(--gold);color:#fff;}
+  .badge.reach{background:#EEF2F7;color:var(--navy-2);}
   .badge.goal{background:#EEF2F7;color:var(--navy-2);}
+
+  /* scholarships */
+  .sch-wrap{margin-top:28px;}
+  .sch-h{font-family:var(--serif);font-size:21px;color:var(--navy);margin-bottom:6px;}
+  .sch-intro{color:var(--muted);font-size:14px;margin-bottom:16px;line-height:1.5;}
+  .sch{border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px;background:var(--panel);}
+  .sch-name{font-weight:700;color:var(--navy);font-size:16px;}
+  .sch-cov{font-size:13px;font-weight:700;color:var(--gold);text-align:center;margin-top:3px;}
+  .sch-status{margin:10px 0;}
+  .sch-reqs{list-style:none;padding:0;margin:0;}
+  .sch-reqs li{position:relative;padding-left:18px;font-size:14px;color:var(--ink);margin-bottom:5px;line-height:1.45;}
+  .sch-reqs li:last-child{margin-bottom:0;}
+  .sch-reqs li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--gold);}
+  .sch-note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5;}
 
   .closer{
     margin:26px 0 6px;padding:22px;border-radius:14px;
@@ -322,11 +336,11 @@
       <section class="screen active" id="s-intro">
         <h1 class="mq-h1">What could four years at Maclay do for your score?</h1>
         <div class="stat">
-          <p>The Class of 2026 entered high school with an average 8th-grade PSAT of
+          <p>The graduating Class of 2026 entered upper school with an average 8th-grade PSAT of
             <span class="big">983</span></p>
-          <p style="margin-top:12px;">By senior year, that same class averaged
+          <p style="margin-top:12px;">By senior year, those same students averaged
             <span class="big">1240 on the SAT</span></p>
-          <p style="margin-top:12px;">That is <span class="grow">257 points of growth.</span></p>
+          <p style="margin-top:12px;">That is <span class="grow">257 points of growth</span>, 77 points higher than the College Board reported average.</p>
         </div>
         <p class="lead">Your starting score is just that: a starting point.</p>
         <p class="lead strong">See where yours could go.</p>
@@ -388,6 +402,13 @@
           <p class="intro" id="col-intro"></p>
           <div id="col-list"></div>
 
+          <div class="sch-wrap">
+            <h3 class="sch-h">Look what your score could unlock in scholarships:</h3>
+            <p class="sch-intro">Florida's Bright Futures program rewards students with college tuition dollars. Here is where your projected score stands against each award's SAT benchmark.</p>
+            <div id="scholarships"></div>
+            <p class="sch-note">Bright Futures also requires the weighted GPA and service or work hours shown, and these benchmarks reflect 2027 to 2028 graduates. Confirm current requirements with your college counselor.</p>
+          </div>
+
           <div class="closer">
             <p>The question isn't where you start. It's what you're willing to do next.</p>
             <p class="small">Your starting score is one number. Your opportunities are much bigger.</p>
@@ -423,7 +444,7 @@
    ========================================================= */
 const QUESTIONS = [
   {
-    lead: "Maclay recommends taking the PSAT at least three times to build confidence and prepare for the SAT.",
+    lead: "Maclay gives the PSAT on campus each year, for 8th, 9th and 10th graders to build confidence and prepare for the SAT.",
     prompt: "How many times will you take it?",
     options: [
       { label: "3 times", points: 35, tag: "Recommended" },
@@ -444,8 +465,8 @@ const QUESTIONS = [
     ],
   },
   {
-    lead: "Maclay recommends completing the three-week S3 SAT Prep Session.",
-    detail: "This summer program meets on campus and provides comprehensive SAT/ACT prep led by experienced classroom teachers.",
+    lead: "Maclay offers a three-week Test Prep session every Summer through our S3 program.",
+    detail: "This summer camp meets on campus and provides comprehensive PSAT/SAT/ACT prep led by experienced classroom teachers.",
     prompt: "Would you attend?",
     options: [
       { label: "Yes", points: 50, tag: "Recommended" },
@@ -453,8 +474,8 @@ const QUESTIONS = [
     ],
   },
   {
-    lead: "Maclay also offers a one-week S3 SAT Prep session for students looking for a shorter, focused test-prep boost.",
-    detail: "The summer program meets on campus and targets key SAT skills and strategies.",
+    lead: "Maclay also offers a one-week Math Intensive SAT Prep session for students looking for a shorter, focused test-prep boost.",
+    detail: "The summer program meets on campus and targets key math PSAT/SAT/ACT skills and strategies.",
     prompt: "Would you attend?",
     options: [
       { label: "Yes", points: 25, tag: "Recommended" },
@@ -462,7 +483,7 @@ const QUESTIONS = [
     ],
   },
   {
-    lead: "Maclay recommends taking its nine-week SAT Prep class twice during high school.",
+    lead: "Maclay recommends taking our nine-week SAT Prep class twice between 9th and 11th grade.",
     detail: "Built into the school day, the course provides targeted SAT prep and test-taking strategies with a specially trained Maclay teacher.",
     prompt: "How many times will you take it?",
     options: [
@@ -493,6 +514,32 @@ const COLLEGES = [
   { name: "Auburn University",            low: 1250, high: 1450 },
   { name: "University of Georgia",        low: 1360, high: 1500 },
   { name: "Harvard University",           low: 1540, high: 1550 },
+];
+
+/* =========================================================
+   SCHOLARSHIPS  (Florida Bright Futures — edit thresholds here)
+   ========================================================= */
+const SCHOLARSHIPS = [
+  {
+    name: "Florida Academic Scholars (FAS)",
+    coverage: "100% tuition coverage",
+    sat: 1350,
+    reqs: [
+      "SAT 1350 (or ACT 29)",
+      "Weighted GPA 3.50 in 16 college-preparatory credits",
+      "100 volunteer hours, 100 paid work hours, or a combined total of 100 hours",
+    ],
+  },
+  {
+    name: "Florida Medallion Scholars (FMS)",
+    coverage: "Partial tuition coverage",
+    sat: 1200,
+    reqs: [
+      "SAT 1200 (or ACT 25)",
+      "Weighted GPA 3.00 in 16 college-preparatory credits",
+      "75 volunteer hours, 100 paid work hours, or a combined total of 100 hours",
+    ],
+  },
 ];
 
 const PSAT_MIN = 320, PSAT_MAX = 1520, SAT_MAX = 1600, BAND = 30;
@@ -601,22 +648,17 @@ $('unlock').addEventListener('click', ()=> show('s-colleges'));
 /* ---------- colleges ---------- */
 function buildColleges(low, high, proj){
   const list = $('col-list'); list.innerHTML='';
-  const overlap = COLLEGES
-    .filter(c => c.low <= high && c.high >= low)
-    .sort((a,b)=>a.low-b.low);
 
-  let intro, rows;
-  if(overlap.length){
-    intro = "These schools have admitted students with SAT scores in your projected range.";
-    rows = overlap.map(c=>{
-      const strong = proj >= c.low && proj <= c.high;
-      return { c, badge: strong ? ['match','In range'] : ['reach','Within reach'] };
-    });
-  } else {
-    intro = "You're not far off. A little more growth puts these schools within reach, and it's exactly the kind of progress Maclay is built to support.";
-    rows = [...COLLEGES].sort((a,b)=>a.low-b.low).slice(0,3).map(c=>({ c, badge:['goal','Goal'] }));
-  }
-  $('col-intro').textContent = intro;
+  const inRange = COLLEGES.filter(c => proj >= c.low).sort((a,b)=> b.low - a.low);
+  const reach   = COLLEGES.filter(c => proj <  c.low).sort((a,b)=> a.low - b.low);
+
+  $('col-intro').textContent =
+    "\u201CIn range\u201D means your projected score has reached that school's admitted-student range. \u201CWithin reach\u201D is your next goal to aim for.";
+
+  const rows = [
+    ...inRange.map(c => ({ c, badge: ['match','In range'] })),
+    ...reach.map(c   => ({ c, badge: ['reach','Within reach'] })),
+  ];
 
   rows.forEach(({c,badge})=>{
     const el = document.createElement('div');
@@ -625,6 +667,28 @@ function buildColleges(low, high, proj){
         <div class="range">Admitted SAT range ${c.low}\u2013${c.high}</div></div>
         <span class="badge ${badge[0]}">${badge[1]}</span>`;
     list.appendChild(el);
+  });
+
+  buildScholarships(proj);
+}
+
+/* ---------- scholarships ---------- */
+function buildScholarships(proj){
+  const box = $('scholarships'); box.innerHTML='';
+  SCHOLARSHIPS.forEach(s=>{
+    const met = proj >= s.sat;
+    const status = met
+      ? `<span class="badge match">SAT benchmark met</span>`
+      : `<span class="badge reach">${s.sat - proj} points to go</span>`;
+    const reqs = s.reqs.map(r=>`<li>${r}</li>`).join('');
+    const el = document.createElement('div');
+    el.className='sch';
+    el.innerHTML = `
+      <div class="sch-name">${s.name}</div>
+      <div class="sch-cov">${s.coverage}</div>
+      <div class="sch-status">${status}</div>
+      <ul class="sch-reqs">${reqs}</ul>`;
+    box.appendChild(el);
   });
 }
 
