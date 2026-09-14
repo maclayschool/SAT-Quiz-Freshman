@@ -651,7 +651,7 @@ $('unlock').addEventListener('click', ()=> show('s-colleges'));
 function buildColleges(low, high, proj){
   const list = $('col-list'); list.innerHTML='';
 
-  $('col-score').textContent = `Your potential: ${low}\u2013${high}`;
+  $('col-score').textContent = `Your Potential at Maclay: ${low}\u2013${high}`;
 
   const inRange = COLLEGES.filter(c => proj >= c.low).sort((a,b)=> b.low - a.low);
   const reach   = COLLEGES.filter(c => proj <  c.low).sort((a,b)=> a.low - b.low);
