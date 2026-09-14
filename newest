@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>What Could Four Years at Maclay Do for Your Score?</title>
+<style>
+  /* =========================================================
+     BRAND COLORS  (swap these for Maclay's official hex values)
+     ========================================================= */
+  :root{
+    --navy:#15407c;
+    --navy-2:#1E4B7A;
+    --gold:#5181c5;
+    --gold-2:#5181c5;
+    --ink:#1B2733;
+    --muted:#5B6B7B;
+    --line:#E2E8F0;
+    --panel:#F5F7FA;
+    --paper:#FFFFFF;
+    --ok:#5181c5;
+    --radius:16px;
+    --shadow:0 18px 50px rgba(19,41,75,.14);
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0;}
+  html,body{background:transparent;}
+  .mq-wrap{
+    font-family:var(--sans);
+    color:var(--ink);
+    line-height:1.55;
+    padding:20px;
+    display:flex;
+    justify-content:center;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mq-stage{
+    width:100%;
+    max-width:700px;
+    background:var(--paper);
+    border-radius:var(--radius);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+    border:1px solid var(--line);
+  }
+
+  /* header band */
+  .mq-band{
+    background:var(--navy);
+    color:#fff;
+    padding:18px 26px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:16px;
+  }
+  .mq-band .kicker{
+    font-family:var(--sans);
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold-2);
+    font-weight:700;
+  }
+  .mq-band .school{
+    font-family:var(--serif);
+    font-size:19px;
+    font-weight:700;
+    letter-spacing:.01em;
+  }
+  .mq-band .fresh{
+    font-size:12px;
+    color:#cbd7e6;
+    white-space:nowrap;
+  }
+
+  .mq-body{padding:30px 34px 34px;}
+
+  /* screens */
+  .screen{display:none;}
+  .screen.active{display:block;animation:rise .45s ease both;}
+  @keyframes rise{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+  /* ---------- INTRO ---------- */
+  h1.mq-h1{
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:30px;
+    line-height:1.18;
+    color:var(--navy);
+    margin-bottom:16px;
+  }
+  .stat{
+    background:var(--panel);
+    border:1px solid var(--line);
+    border-left:5px solid var(--gold);
+    border-radius:12px;
+    padding:18px 20px;
+    margin:18px 0 22px;
+  }
+  .stat p{color:var(--muted);font-size:15px;}
+  .stat .big{
+    font-family:var(--serif);
+    color:var(--navy);
+    font-weight:700;
+    font-size:26px;
+    display:block;
+    margin-top:4px;
+  }
+  .stat .grow{color:var(--ok);font-weight:700;}
+  .lead{font-size:17px;color:var(--ink);margin:6px 0 4px;}
+  .lead.strong{font-weight:700;color:var(--navy);font-size:19px;}
+
+  .field{margin:24px 0 8px;}
+  .field label{display:block;font-weight:700;color:var(--navy);margin-bottom:8px;font-size:15px;}
+  .field .hint{color:var(--muted);font-size:13px;margin-bottom:10px;}
+  .field input{
+    width:100%;
+    font-size:20px;
+    font-family:var(--serif);
+    padding:14px 16px;
+    border:2px solid var(--line);
+    border-radius:12px;
+    color:var(--ink);
+    transition:border-color .2s;
+  }
+  .field input:focus{outline:none;border-color:var(--navy-2);}
+  .err{color:#b02a37;font-size:13px;min-height:18px;margin-top:6px;font-weight:600;}
+
+  /* buttons */
+  .btn{
+    font-family:var(--sans);
+    font-size:16px;
+    font-weight:700;
+    border:none;
+    border-radius:12px;
+    padding:15px 26px;
+    cursor:pointer;
+    text-align:center;
+    text-decoration:none;
+    display:inline-block;
+    transition:transform .12s ease,background .2s ease,box-shadow .2s;
+  }
+  .btn:active{transform:translateY(1px);}
+  .btn-primary{background:var(--navy);color:#fff;}
+  .btn-primary:hover{background:var(--navy-2);}
+  .btn-gold{background:var(--gold);color:#fff;}
+  .btn-gold:hover{background:var(--gold-2);}
+  .btn-ghost{background:transparent;color:var(--navy);border:2px solid var(--line);padding:12px 20px;font-size:14px;}
+  .btn-ghost:hover{border-color:var(--navy-2);}
+  .btn-block{width:100%;}
+  .btn:disabled{opacity:.45;cursor:not-allowed;}
+  .btn:focus-visible{outline:3px solid var(--gold-2);outline-offset:2px;}
+
+  /* ---------- QUIZ ---------- */
+  .quiz-top{display:flex;align-items:center;gap:14px;margin-bottom:22px;}
+  .dots{display:flex;gap:7px;}
+  .dot{width:9px;height:9px;border-radius:50%;background:var(--line);transition:background .3s;}
+  .dot.done{background:var(--gold);}
+  .dot.current{background:var(--navy);transform:scale(1.25);}
+  .qcount{font-size:13px;color:var(--muted);font-weight:600;margin-left:auto;}
+
+  .quiz-layout{display:flex;gap:22px;align-items:stretch;}
+
+  /* growth column */
+  .meter{
+    width:56px;
+    flex:0 0 56px;
+    border-radius:12px;
+    background:var(--panel);
+    border:1px solid var(--line);
+    position:relative;
+    overflow:hidden;
+    min-height:260px;
+  }
+  .meter-fill{
+    position:absolute;
+    left:0;right:0;bottom:0;
+    height:0%;
+    background:linear-gradient(180deg,var(--gold-2),var(--gold));
+    transition:height .7s cubic-bezier(.22,1,.36,1);
+  }
+  .meter-arrow{
+    position:absolute;left:0;right:0;
+    text-align:center;
+    color:var(--navy);
+    font-size:13px;
+    bottom:0;
+    transform:translateY(50%);
+    transition:bottom .7s cubic-bezier(.22,1,.36,1);
+    pointer-events:none;
+    font-weight:700;
+  }
+  .meter-label{
+    position:absolute;top:8px;left:0;right:0;
+    text-align:center;font-size:10px;letter-spacing:.08em;
+    text-transform:uppercase;color:var(--muted);font-weight:700;
+  }
+
+  .qmain{flex:1;min-width:0;}
+  .qblock{margin-bottom:18px;}
+  .q-lead{font-family:var(--serif);font-size:20px;color:var(--navy);font-weight:700;line-height:1.3;}
+  .q-detail{font-size:14.5px;color:var(--ink);font-weight:700;line-height:1.4;margin-top:9px;}
+  .q-prompt{font-size:17px;color:var(--ink);font-weight:400;margin-top:12px;}
+  .q-note{font-size:13px;color:var(--muted);font-weight:400;line-height:1.45;margin-top:9px;}
+
+  .opts{display:flex;flex-direction:column;gap:10px;}
+  .opt{
+    text-align:left;
+    background:var(--paper);
+    border:2px solid var(--line);
+    border-radius:12px;
+    padding:14px 16px;
+    font-size:16px;
+    font-weight:600;
+    color:var(--ink);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    transition:border-color .18s,background .18s,transform .1s;
+  }
+  .opt:hover{border-color:var(--navy-2);}
+  .opt:focus-visible{outline:3px solid var(--gold-2);outline-offset:2px;}
+  .opt.sel{border-color:var(--navy);background:var(--navy);color:#fff;}
+  .opt .tag{
+    font-size:11px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;
+    background:var(--gold);color:#fff;padding:3px 8px;border-radius:20px;white-space:nowrap;
+  }
+  .opt.sel .tag{background:var(--gold-2);}
+
+  .qnav{display:flex;justify-content:space-between;gap:12px;margin-top:22px;}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{text-align:center;padding:8px 0;}
+  .reveal .pre{font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:800;margin-bottom:10px;}
+  .reveal .score{
+    font-family:var(--serif);
+    font-weight:700;
+    font-size:64px;
+    line-height:1;
+    color:var(--navy);
+    letter-spacing:-.01em;
+    animation:pop .6s cubic-bezier(.2,1.3,.4,1) both;
+  }
+  @keyframes pop{from{opacity:0;transform:scale(.8);}to{opacity:1;transform:none;}}
+  .reveal .sub{color:var(--muted);font-size:15px;margin-top:10px;margin-bottom:30px;}
+  .frombox{
+    display:inline-flex;align-items:center;gap:12px;
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:999px;padding:8px 18px;margin:20px 0 6px;
+    font-size:15px;color:var(--muted);
+  }
+  .frombox b{color:var(--navy);font-family:var(--serif);font-size:17px;}
+  .arrow{color:var(--gold);font-weight:800;}
+  .reveal h2{
+    font-family:var(--serif);font-size:24px;color:var(--navy);margin:26px 0 18px;font-weight:700;
+  }
+
+  /* ---------- COLLEGES ---------- */
+  .colleges h2{font-family:var(--serif);font-size:26px;color:var(--navy);margin-bottom:6px;}
+  .colleges .intro{color:var(--muted);font-size:15px;margin-bottom:20px;}
+  .college{
+    display:flex;align-items:center;justify-content:space-between;gap:12px;
+    border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;
+    background:var(--paper);
+  }
+  .college .name{font-weight:700;color:var(--navy);font-size:16px;}
+  .college .range{font-family:var(--serif);color:var(--muted);font-size:14px;margin-top:2px;}
+  .badge{font-size:11px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;padding:5px 10px;border-radius:20px;white-space:nowrap;}
+  .badge.match{background:var(--gold);color:#fff;}
+  .badge.reach{background:#EEF2F7;color:var(--navy-2);}
+  .badge.goal{background:#EEF2F7;color:var(--navy-2);}
+
+  /* scholarships */
+  .sch-wrap{margin-top:28px;}
+  .sch-h{font-family:var(--serif);font-size:21px;color:var(--navy);margin-bottom:6px;}
+  .sch-intro{color:var(--muted);font-size:14px;margin-bottom:16px;line-height:1.5;}
+  .sch{border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:12px;background:var(--panel);}
+  .sch-name{font-weight:700;color:var(--navy);font-size:16px;}
+  .sch-cov{font-size:13px;font-weight:700;color:var(--gold);text-align:center;margin-top:3px;}
+  .sch-status{margin:10px 0;}
+  .sch-reqs{list-style:none;padding:0;margin:0;}
+  .sch-reqs li{position:relative;padding-left:18px;font-size:14px;color:var(--ink);margin-bottom:5px;line-height:1.45;}
+  .sch-reqs li:last-child{margin-bottom:0;}
+  .sch-reqs li::before{content:"";position:absolute;left:0;top:8px;width:6px;height:6px;border-radius:50%;background:var(--gold);}
+  .sch-note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5;}
+
+  .closer{
+    margin:26px 0 6px;padding:22px;border-radius:14px;
+    background:var(--navy);color:#fff;text-align:center;
+  }
+  .closer p{font-family:var(--serif);font-size:20px;line-height:1.35;}
+  .closer .small{font-family:var(--sans);font-size:13px;color:#cbd7e6;margin-top:8px;line-height:1.5;}
+
+  .cta-row{display:flex;gap:12px;margin-top:18px;flex-wrap:wrap;}
+  .cta-row .btn{flex:1;min-width:180px;}
+
+  .disclaimer{font-size:12px;color:var(--muted);margin-top:18px;line-height:1.5;}
+  .restart{margin-top:16px;text-align:center;}
+
+  /* mobile */
+  @media (max-width:560px){
+    .mq-wrap{padding:0;}
+    .mq-stage{border-radius:0;border-left:none;border-right:none;}
+    .mq-body{padding:24px 20px 28px;}
+    h1.mq-h1{font-size:25px;}
+    .reveal .score{font-size:52px;}
+    .meter{width:44px;flex-basis:44px;min-height:230px;}
+    .quiz-layout{gap:14px;}
+    .mq-band .school{font-size:17px;}
+    .mq-band .fresh{display:none;}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;}
+  }
+</style>
+</head>
+<body>
+<div class="mq-wrap">
+  <div class="mq-stage" role="region" aria-label="Maclay score projection quiz">
+    <div class="mq-band">
+      <div>
+        <div class="kicker">Maclay School</div>
+        <div class="school">SAT Score Projection</div>
+      </div>
+      <div class="fresh">For Incoming Freshmen</div>
+    </div>
+
+    <div class="mq-body">
+
+      <!-- ============ SCREEN 1: INTRO ============ -->
+      <section class="screen active" id="s-intro">
+        <h1 class="mq-h1">What could four years at Maclay do for your score?</h1>
+        <div class="stat">
+          <p>The graduating Class of 2026 entered upper school with an average 8th-grade PSAT of
+            <span class="big">983</span></p>
+          <p style="margin-top:12px;">By senior year, those same students averaged
+            <span class="big">1240 on the SAT</span></p>
+          <p style="margin-top:12px;">That is <span class="grow">257 points of growth</span>, 77 points higher than the College Board reported average.</p>
+        </div>
+        <p class="lead">Your starting score is just that: a starting point.</p>
+        <p class="lead strong">See where yours could go.</p>
+
+        <div class="field">
+          <label for="psat" style="color:#000000;">What is your current PSAT score?</label>
+          <div class="hint">Enter a total score between 320 and 1520.</div>
+          <input id="psat" type="number" inputmode="numeric" min="320" max="1520" placeholder="e.g. 1010" aria-describedby="psat-err">
+          <div class="err" id="psat-err" aria-live="polite"></div>
+        </div>
+
+        <button class="btn btn-primary btn-block" id="begin">Ready to see where you could go?</button>
+      </section>
+
+      <!-- ============ SCREEN 2: QUIZ ============ -->
+      <section class="screen" id="s-quiz">
+        <div class="quiz-top">
+          <div class="dots" id="dots" aria-hidden="true"></div>
+          <div class="qcount" id="qcount">Question 1 of 6</div>
+        </div>
+
+        <div class="quiz-layout">
+          <div class="meter" aria-hidden="true">
+            <div class="meter-label">Growth</div>
+            <div class="meter-fill" id="meter-fill"></div>
+            <div class="meter-arrow" id="meter-arrow">▲</div>
+          </div>
+
+          <div class="qmain">
+            <div class="qblock" id="qblock"></div>
+            <div class="opts" id="opts" role="group" aria-label="Answer choices"></div>
+            <div class="qnav">
+              <button class="btn btn-ghost" id="back">Back</button>
+              <button class="btn btn-primary" id="next" disabled>Next</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN 3: REVEAL ============ -->
+      <section class="screen" id="s-reveal">
+        <div class="reveal">
+          <div class="pre">Your potential</div>
+          <div class="score" id="score-range">—</div>
+          <div class="frombox">
+            <span>Starting PSAT <b id="from-psat">—</b></span>
+            <span class="arrow">→</span>
+            <span>Projected SAT <b id="to-sat">—</b></span>
+          </div>
+          <div class="sub">Based on your answers and the individual plan you just built, you can see how taking advantage of the opportunities at Maclay can help you stay on track and reach your potential.</div>
+          <button class="btn btn-gold btn-block" id="unlock">See what this score could unlock →</button>
+        </div>
+      </section>
+
+      <!-- ============ SCREEN 4: COLLEGES ============ -->
+      <section class="screen" id="s-colleges">
+        <div class="colleges">
+          <h2>Look where a score like that could take you!</h2>
+          <p class="intro" id="col-intro"></p>
+          <div id="col-list"></div>
+
+          <div class="sch-wrap">
+            <h3 class="sch-h">Look what your score could unlock in scholarships:</h3>
+            <p class="sch-intro">Florida's Bright Futures program rewards students with college tuition dollars. Here is where your projected score stands against each award's SAT benchmark.</p>
+            <div id="scholarships"></div>
+            <p class="sch-note">Bright Futures also requires the weighted GPA and service or work hours shown, and these benchmarks reflect 2027 to 2028 graduates. Confirm current requirements with your college counselor.</p>
+          </div>
+
+          <div class="closer">
+            <p>The question isn't where you start. It's what you're willing to do next.</p>
+            <p class="small">Your starting score is one number. Your opportunities are much bigger.</p>
+          </div>
+
+          <div class="cta-row">
+            <!-- Replace the href values with your Finalsite links -->
+            <a class="btn btn-primary" href="https://portals.veracross.com/maclay/form/tour-interests/website" target="_blank" rel="noopener" id="cta-visit">SCHEDULE A VISIT</a>
+            <a class="btn btn-gold" href="https://portals.veracross.com/maclay/form/inquiry/website" target="_blank" rel="noopener" id="cta-info">REQUEST INFORMATION</a>
+          </div>
+
+          <p class="disclaimer">
+            This projection illustrates what sustained preparation, repeated testing, and taking
+            advantage of Maclay's SAT resources could make possible. Individual results vary.
+            SAT score ranges are based on reported scores for admitted students and are shown for
+            comparison only. College SAT data source: College Navigator.
+          </p>
+
+          <div class="restart">
+            <button class="btn btn-ghost" id="restart">Start over</button>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================
+   SCORING MODEL  (edit point values here)
+   Full recommended path = +270
+   ========================================================= */
+const QUESTIONS = [
+  {
+    lead: "Maclay gives the PSAT on campus each year, for 8th, 9th and 10th graders to build confidence and prepare for the SAT.",
+    prompt: "How many times will you take it?",
+    options: [
+      { label: "3 times", points: 35, tag: "Recommended" },
+      { label: "2 times", points: 20 },
+      { label: "1 time",  points: 10 },
+    ],
+  },
+  {
+    lead: "Maclay recommends taking the SAT up to five times to maximize your opportunity for improvement.",
+    prompt: "How many times will you take it?",
+    note: "Superscoring combines your highest Math and Reading & Writing scores from different SAT test dates to create your best possible combined score.",
+    options: [
+      { label: "5 times", points: 55, tag: "Recommended" },
+      { label: "4 times", points: 45 },
+      { label: "3 times", points: 35 },
+      { label: "2 times", points: 20 },
+      { label: "1 time",  points: 10 },
+    ],
+  },
+  {
+    lead: "Maclay offers a three-week Test Prep session every Summer through our S3 program.",
+    detail: "This summer camp meets on campus and provides comprehensive PSAT/SAT/ACT prep led by experienced classroom teachers.",
+    prompt: "Would you attend?",
+    options: [
+      { label: "Yes", points: 50, tag: "Recommended" },
+      { label: "No",  points: 0 },
+    ],
+  },
+  {
+    lead: "Maclay also offers a one-week Math Intensive SAT Prep session for students looking for a shorter, focused test-prep boost.",
+    detail: "The summer program meets on campus and targets key math PSAT/SAT/ACT skills and strategies.",
+    prompt: "Would you attend?",
+    options: [
+      { label: "Yes", points: 25, tag: "Recommended" },
+      { label: "No",  points: 0 },
+    ],
+  },
+  {
+    lead: "Maclay recommends taking our nine-week SAT Prep class twice between 9th and 11th grade.",
+    detail: "Built into the school day, the course provides targeted SAT prep and test-taking strategies with a specially trained Maclay teacher.",
+    prompt: "How many times will you take it?",
+    options: [
+      { label: "2 times", points: 70, tag: "Recommended" },
+      { label: "1 time",  points: 40 },
+      { label: "0 times", points: 0 },
+    ],
+  },
+  {
+    lead: "Are you excited to get to know your College Counselor?",
+    detail: "Starting freshman year, your counselor helps you understand your scores, build a testing strategy, decide when to test and retest, and make a plan based on your goals.",
+    prompt: "Your counselor gets to know you, your goals, and your family, building a personalized plan and guiding you every step of the way.",
+    options: [
+      { label: "Yes!",    points: 35, tag: "Recommended" },
+      { label: "Not yet", points: 0 },
+    ],
+  },
+];
+
+/* =========================================================
+   COLLEGES  (edit list and admitted-student SAT ranges here)
+   ========================================================= */
+const COLLEGES = [
+  { name: "University of Florida",        low: 1420, high: 1520 },
+  { name: "Florida State University",     low: 1380, high: 1480 },
+  { name: "University of South Florida",  low: 1290, high: 1420 },
+  { name: "University of Central Florida",low: 1310, high: 1420 },
+  { name: "Auburn University",            low: 1250, high: 1450 },
+  { name: "University of Georgia",        low: 1360, high: 1500 },
+  { name: "Harvard University",           low: 1540, high: 1550 },
+];
+
+/* =========================================================
+   SCHOLARSHIPS  (Florida Bright Futures — edit thresholds here)
+   ========================================================= */
+const SCHOLARSHIPS = [
+  {
+    name: "Florida Academic Scholars (FAS)",
+    coverage: "100% tuition coverage",
+    sat: 1350,
+    reqs: [
+      "SAT 1350 (or ACT 29)",
+      "Weighted GPA 3.50 in 16 college-preparatory credits",
+      "100 volunteer hours, 100 paid work hours, or a combined total of 100 hours",
+    ],
+  },
+  {
+    name: "Florida Medallion Scholars (FMS)",
+    coverage: "Partial tuition coverage",
+    sat: 1200,
+    reqs: [
+      "SAT 1200 (or ACT 25)",
+      "Weighted GPA 3.00 in 16 college-preparatory credits",
+      "75 volunteer hours, 100 paid work hours, or a combined total of 100 hours",
+    ],
+  },
+];
+
+const PSAT_MIN = 320, PSAT_MAX = 1520, SAT_MAX = 1600, BAND = 30;
+const MAX_POINTS = QUESTIONS.reduce((s,q)=>s+Math.max(...q.options.map(o=>o.points)),0);
+
+/* ---------- state ---------- */
+let psat = null;
+let idx = 0;
+const answers = new Array(QUESTIONS.length).fill(null); // stores chosen option index
+
+/* ---------- helpers ---------- */
+const $ = id => document.getElementById(id);
+function show(screenId){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $(screenId).classList.add('active');
+  document.querySelector('.mq-stage').scrollIntoView({behavior:'smooth',block:'start'});
+}
+function pointsSoFar(){
+  return answers.reduce((sum,a,i)=> a==null ? sum : sum + QUESTIONS[i].options[a].points, 0);
+}
+function updateMeter(){
+  const pct = Math.min(100, Math.round(pointsSoFar()/MAX_POINTS*100));
+  $('meter-fill').style.height = pct + '%';
+  $('meter-arrow').style.bottom = pct + '%';
+}
+
+/* ---------- intro ---------- */
+$('begin').addEventListener('click', ()=>{
+  const val = parseInt($('psat').value, 10);
+  const err = $('psat-err');
+  if(isNaN(val)){ err.textContent = 'Enter your PSAT score to begin.'; return; }
+  if(val < PSAT_MIN || val > PSAT_MAX){ err.textContent = 'Enter a score between 320 and 1520.'; return; }
+  err.textContent = '';
+  psat = val;
+  idx = 0;
+  answers.fill(null);
+  buildDots();
+  renderQuestion();
+  show('s-quiz');
+});
+$('psat').addEventListener('keydown', e=>{ if(e.key==='Enter') $('begin').click(); });
+
+/* ---------- quiz ---------- */
+function buildDots(){
+  const d = $('dots'); d.innerHTML='';
+  QUESTIONS.forEach(()=>{ const el=document.createElement('div'); el.className='dot'; d.appendChild(el); });
+}
+function refreshDots(){
+  [...$('dots').children].forEach((el,i)=>{
+    el.className = 'dot' + (i<idx?' done':'') + (i===idx?' current':'');
+  });
+}
+function renderQuestion(){
+  const q = QUESTIONS[idx];
+  $('qcount').textContent = `Question ${idx+1} of ${QUESTIONS.length}`;
+  let html = `<div class="q-lead">${q.lead}</div>`;
+  if(q.detail) html += `<div class="q-detail">${q.detail}</div>`;
+  html += `<div class="q-prompt">${q.prompt}</div>`;
+  if(q.note) html += `<div class="q-note">${q.note}</div>`;
+  $('qblock').innerHTML = html;
+  refreshDots();
+
+  const box = $('opts'); box.innerHTML='';
+  q.options.forEach((o,i)=>{
+    const b = document.createElement('button');
+    b.className = 'opt' + (answers[idx]===i ? ' sel':'');
+    b.innerHTML = `<span>${o.label}</span>` + (o.tag?`<span class="tag">${o.tag}</span>`:'');
+    b.addEventListener('click', ()=>{
+      answers[idx] = i;
+      [...box.children].forEach(c=>c.classList.remove('sel'));
+      b.classList.add('sel');
+      updateMeter();
+      $('next').disabled = false;
+    });
+    box.appendChild(b);
+  });
+
+  $('next').disabled = answers[idx]===null;
+  $('back').style.visibility = idx===0 ? 'hidden' : 'visible';
+  $('next').textContent = idx===QUESTIONS.length-1 ? 'See my potential' : 'Next';
+  updateMeter();
+}
+$('next').addEventListener('click', ()=>{
+  if(answers[idx]===null) return;
+  if(idx < QUESTIONS.length-1){ idx++; renderQuestion(); }
+  else { doReveal(); }
+});
+$('back').addEventListener('click', ()=>{ if(idx>0){ idx--; renderQuestion(); } });
+
+/* ---------- reveal ---------- */
+function projectedScore(){
+  return Math.min(SAT_MAX, psat + pointsSoFar());
+}
+function doReveal(){
+  const proj = projectedScore();
+  const low = proj - BAND;
+  const high = Math.min(SAT_MAX, proj + BAND);
+  $('score-range').textContent = `${low}\u2013${high}`;
+  $('from-psat').textContent = psat;
+  $('to-sat').textContent = proj;
+  buildColleges(low, high, proj);
+  show('s-reveal');
+}
+$('unlock').addEventListener('click', ()=> show('s-colleges'));
+
+/* ---------- colleges ---------- */
+function buildColleges(low, high, proj){
+  const list = $('col-list'); list.innerHTML='';
+
+  const inRange = COLLEGES.filter(c => proj >= c.low).sort((a,b)=> b.low - a.low);
+  const reach   = COLLEGES.filter(c => proj <  c.low).sort((a,b)=> a.low - b.low);
+
+  $('col-intro').textContent =
+    "\u201CIn range\u201D means your projected score has reached that school's admitted-student range. \u201CWithin reach\u201D is your next goal to aim for.";
+
+  const rows = [
+    ...inRange.map(c => ({ c, badge: ['match','In range'] })),
+    ...reach.map(c   => ({ c, badge: ['reach','Within reach'] })),
+  ];
+
+  rows.forEach(({c,badge})=>{
+    const el = document.createElement('div');
+    el.className='college';
+    el.innerHTML = `<div><div class="name">${c.name}</div>
+        <div class="range">Admitted SAT range ${c.low}\u2013${c.high}</div></div>
+        <span class="badge ${badge[0]}">${badge[1]}</span>`;
+    list.appendChild(el);
+  });
+
+  buildScholarships(proj);
+}
+
+/* ---------- scholarships ---------- */
+function buildScholarships(proj){
+  const box = $('scholarships'); box.innerHTML='';
+  SCHOLARSHIPS.forEach(s=>{
+    const met = proj >= s.sat;
+    const status = met
+      ? `<span class="badge match">SAT benchmark met</span>`
+      : `<span class="badge reach">${s.sat - proj} points to go</span>`;
+    const reqs = s.reqs.map(r=>`<li>${r}</li>`).join('');
+    const el = document.createElement('div');
+    el.className='sch';
+    el.innerHTML = `
+      <div class="sch-name">${s.name}</div>
+      <div class="sch-cov">${s.coverage}</div>
+      <div class="sch-status">${status}</div>
+      <ul class="sch-reqs">${reqs}</ul>`;
+    box.appendChild(el);
+  });
+}
+
+/* ---------- restart ---------- */
+$('restart').addEventListener('click', ()=>{
+  psat=null; idx=0; answers.fill(null);
+  $('psat').value=''; $('psat-err').textContent='';
+  show('s-intro');
+});
+</script>
+</body>
+</html>
