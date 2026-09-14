@@ -261,6 +261,7 @@
   }
 
   /* ---------- COLLEGES ---------- */
+  .col-score{text-align:center;font-family:var(--serif);font-weight:700;color:#000;font-size:24px;margin-bottom:12px;}
   .colleges h2{font-family:var(--serif);font-size:26px;color:var(--navy);margin-bottom:6px;}
   .colleges .intro{color:var(--muted);font-size:15px;margin-bottom:20px;}
   .college{
@@ -398,6 +399,7 @@
       <!-- ============ SCREEN 4: COLLEGES ============ -->
       <section class="screen" id="s-colleges">
         <div class="colleges">
+          <div class="col-score" id="col-score"></div>
           <h2>Look where a score like that could take you!</h2>
           <p class="intro" id="col-intro"></p>
           <div id="col-list"></div>
@@ -648,6 +650,8 @@ $('unlock').addEventListener('click', ()=> show('s-colleges'));
 /* ---------- colleges ---------- */
 function buildColleges(low, high, proj){
   const list = $('col-list'); list.innerHTML='';
+
+  $('col-score').textContent = `Your potential: ${low}\u2013${high}`;
 
   const inRange = COLLEGES.filter(c => proj >= c.low).sort((a,b)=> b.low - a.low);
   const reach   = COLLEGES.filter(c => proj <  c.low).sort((a,b)=> a.low - b.low);
